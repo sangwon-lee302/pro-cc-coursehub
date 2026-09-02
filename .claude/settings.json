@@ -1,9 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(php artisan *)",
-      "Bash(composer *)",
-      "Bash(npm *)"
+      "Bash(./vendor/bin/sail artisan *)",
+      "Bash(./vendor/bin/sail composer *)",
+      "Bash(./vendor/bin/sail npm *)",
+      "Bash(./vendor/bin/sail pint *)",
+      "Bash(./vendor/bin/sail test *)",
+      "Bash(git *)"
     ]
   }
 }

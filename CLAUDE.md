@@ -4,28 +4,39 @@
 
 ## 技術スタック
 
+- PHP 8.2
 - Laravel 10
-- MySQL
+- Laravel Sail（Docker 開発環境）
+- MySQL 8.0
 - Blade + Tailwind CSS
+
+## コース構造
+
+Course > Chapter > Lesson > Quiz の階層構造。
+
+- Course: コーチが作成する講座
+- Chapter: Course 内の章（並び順を持つ）
+- Lesson: Chapter 内のレッスン（本文コンテンツ）
+- Quiz: Lesson に紐づく小テスト（Question / Option で構成）
 
 ## 開発環境
 
-Docker Compose で起動:
+Docker Compose（Sail）で起動:
 
 ```bash
-docker compose up -d
+./vendor/bin/sail up -d
 ```
 
 マイグレーション:
 
 ```bash
-php artisan migrate
+./vendor/bin/sail artisan migrate
 ```
 
 シーディング:
 
 ```bash
-php artisan db:seed
+./vendor/bin/sail artisan db:seed
 ```
 
 ## ユーザーロール
@@ -37,5 +48,9 @@ php artisan db:seed
 ## テスト
 
 ```bash
-php artisan test
+./vendor/bin/sail artisan test
 ```
+
+## コーディング規約・設計方針
+
+README.md のコーディング規約・設計方針セクションを参照。
