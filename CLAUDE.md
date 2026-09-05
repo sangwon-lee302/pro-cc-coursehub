@@ -48,7 +48,7 @@ Docker Compose（Sail）で起動:
 ## テスト
 
 ```bash
-./vendor/bin/sail artisan test
+./vendor/bin/sail test
 ```
 
 ## コーディング規約・設計方針
