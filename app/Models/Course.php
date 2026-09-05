@@ -58,6 +58,9 @@ class Course extends Model
         return $query->where('status', 'published');
     }
 
+    // TODO: hasManyThrough(Lesson::class, Chapter::class) の lessons() リレーションを追加し、
+    // $this->lessons()->where('is_published', true)->pluck('id')->toArray() に置き換えられる。
+    // 現状は chapters() のクエリ結果を whereIn に渡す2クエリ構成だが、hasManyThrough なら JOIN で1クエリになる。
     public function getAllLessonIds(): array
     {
         return Lesson::whereIn('chapter_id', $this->chapters()->pluck('id'))
