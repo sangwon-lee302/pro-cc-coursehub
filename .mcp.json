@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "mysql-coursehub": {
+      "type": "stdio",
+      "command": "sh",
+      "args": [
+        "-c",
+        "set -a; . '${CLAUDE_PROJECT_DIR:-.}/.env'; set +a; MYSQL_HOST=127.0.0.1 MYSQL_PORT=\"$DB_PORT\" MYSQL_USER=\"$DB_USERNAME\" MYSQL_PASS=\"$DB_PASSWORD\" MYSQL_DB=\"$DB_DATABASE\" exec npx -y @benborla29/mcp-server-mysql"
+      ]
+    }
+  }
+}
