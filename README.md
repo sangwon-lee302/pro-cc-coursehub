@@ -37,19 +37,19 @@ DB_PASSWORD=password
 4. Docker を起動
 
 ```bash
-docker compose up -d
+./vendor/bin/sail up -d
 ```
 
 5. マイグレーション・シーディング
 
 ```bash
-php artisan migrate --seed
+./vendor/bin/sail artisan migrate --seed
 ```
 
 6. アプリケーションキーの生成
 
 ```bash
-php artisan key:generate
+./vendor/bin/sail artisan key:generate
 ```
 
 ### キュー設定
@@ -68,7 +68,7 @@ QUEUE_CONNECTION=redis
 ## テスト
 
 ```bash
-php artisan test
+./vendor/bin/sail test
 ```
 
 ## コーディング規約
