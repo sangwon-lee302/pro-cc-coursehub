@@ -3,7 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
+use App\Models\Chapter;
 use App\Models\Course;
+use App\Models\Lesson;
+use App\Models\LessonProgress;
 use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -177,5 +180,60 @@ class CourseTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Laravel入門');
         $response->assertDontSee('React基礎');
+    }
+
+    public function test_progress_rate_reaches_100_percent_with_unpublished_lessons(): void
+    {
+        $course = Course::factory()->create([
+            'user_id' => $this->coach->id,
+            'category_id' => $this->category->id,
+        ]);
+        $chapter = Chapter::factory()->create(['course_id' => $course->id]);
+
+        $publishedLessons = Lesson::factory()->count(2)->create(['chapter_id' => $chapter->id]);
+        Lesson::factory()->unpublished()->create(['chapter_id' => $chapter->id]);
+
+        foreach ($publishedLessons as $lesson) {
+            LessonProgress::factory()->create([
+                'user_id' => $this->student->id,
+                'lesson_id' => $lesson->id,
+                'status' => 'completed',
+            ]);
+        }
+
+        $this->assertSame(100, $course->getProgressRate($this->student->id));
+    }
+
+    public function test_progress_rate_counts_only_published_lessons(): void
+    {
+        $course = Course::factory()->create([
+            'user_id' => $this->coach->id,
+            'category_id' => $this->category->id,
+        ]);
+        $chapter = Chapter::factory()->create(['course_id' => $course->id]);
+
+        $publishedLessons = Lesson::factory()->count(2)->create(['chapter_id' => $chapter->id]);
+        Lesson::factory()->unpublished()->create(['chapter_id' => $chapter->id]);
+
+        LessonProgress::factory()->create([
+            'user_id' => $this->student->id,
+            'lesson_id' => $publishedLessons->first()->id,
+            'status' => 'completed',
+        ]);
+
+        $this->assertSame(50, $course->getProgressRate($this->student->id));
+    }
+
+    public function test_progress_rate_is_zero_when_no_published_lessons_exist(): void
+    {
+        $course = Course::factory()->create([
+            'user_id' => $this->coach->id,
+            'category_id' => $this->category->id,
+        ]);
+        $chapter = Chapter::factory()->create(['course_id' => $course->id]);
+
+        Lesson::factory()->unpublished()->count(2)->create(['chapter_id' => $chapter->id]);
+
+        $this->assertSame(0, $course->getProgressRate($this->student->id));
     }
 }
