@@ -71,13 +71,11 @@ class Course extends Model
 
     public function getProgressRate($userId): int
     {
-        // TODO: 下記の分母計算は is_published を考慮しておらず、getAllLessonIds()（公開済みのみ）と
-        // 条件が食い違っている潜在バグ。未公開レッスンがあるコースでは進捗率が実際より低く出る。
-        $totalLessons = $this->chapters()->withCount('lessons')->get()
-            ->sum('lessons_count');
+        $publishedLessonIds = $this->getAllLessonIds();
+        $totalLessons = count($publishedLessonIds);
 
         $completedLessons = LessonProgress::where('user_id', $userId)
-            ->whereIn('lesson_id', $this->getAllLessonIds())
+            ->whereIn('lesson_id', $publishedLessonIds)
             ->where('status', 'completed')
             ->count();
 
