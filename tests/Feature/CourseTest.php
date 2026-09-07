@@ -57,6 +57,93 @@ class CourseTest extends TestCase
         $response->assertSee($course->title);
     }
 
+    public function test_student_cannot_view_draft_course(): void
+    {
+        $course = Course::factory()->draft()->create([
+            'user_id' => $this->coach->id,
+            'category_id' => $this->category->id,
+        ]);
+
+        $response = $this->actingAs($this->student)->get("/courses/{$course->id}");
+
+        $response->assertStatus(403);
+    }
+
+    public function test_student_cannot_view_archived_course(): void
+    {
+        $course = Course::factory()->archived()->create([
+            'user_id' => $this->coach->id,
+            'category_id' => $this->category->id,
+        ]);
+
+        $response = $this->actingAs($this->student)->get("/courses/{$course->id}");
+
+        $response->assertStatus(403);
+    }
+
+    public function test_admin_can_view_course_regardless_of_status(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        foreach (['draft', 'published', 'archived'] as $status) {
+            $course = Course::factory()->create([
+                'user_id' => $this->coach->id,
+                'category_id' => $this->category->id,
+                'status' => $status,
+            ]);
+
+            $response = $this->actingAs($admin)->get("/courses/{$course->id}");
+
+            $response->assertStatus(200);
+        }
+    }
+
+    public function test_coach_can_view_own_course_regardless_of_status(): void
+    {
+        foreach (['draft', 'published', 'archived'] as $status) {
+            $course = Course::factory()->create([
+                'user_id' => $this->coach->id,
+                'category_id' => $this->category->id,
+                'status' => $status,
+            ]);
+
+            $response = $this->actingAs($this->coach)->get("/courses/{$course->id}");
+
+            $response->assertStatus(200);
+        }
+    }
+
+    public function test_coach_cannot_view_other_coaches_non_published_course(): void
+    {
+        $otherCoach = User::factory()->create(['role' => 'coach']);
+
+        foreach (['draft', 'archived'] as $status) {
+            $course = Course::factory()->create([
+                'user_id' => $otherCoach->id,
+                'category_id' => $this->category->id,
+                'status' => $status,
+            ]);
+
+            $response = $this->actingAs($this->coach)->get("/courses/{$course->id}");
+
+            $response->assertStatus(403);
+        }
+    }
+
+    public function test_coach_can_view_other_coaches_published_course(): void
+    {
+        $otherCoach = User::factory()->create(['role' => 'coach']);
+        $course = Course::factory()->create([
+            'user_id' => $otherCoach->id,
+            'category_id' => $this->category->id,
+            'status' => 'published',
+        ]);
+
+        $response = $this->actingAs($this->coach)->get("/courses/{$course->id}");
+
+        $response->assertStatus(200);
+    }
+
     public function test_coach_can_create_course(): void
     {
         $tags = Tag::factory()->count(2)->create();
