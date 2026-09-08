@@ -50,7 +50,7 @@ class Course extends Model
 
     public function tags(): BelongsToMany
     {
-        return $this->belongsToMany(Tag::class, 'course_tag');
+        return $this->belongsToMany(Tag::class);
     }
 
     public function scopePublished($query)
