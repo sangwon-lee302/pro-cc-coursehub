@@ -27,12 +27,12 @@
                 @foreach($quiz->questions->sortBy('order') as $index => $question)
                     <div class="mb-6 p-5 bg-gray-50 rounded-xl border border-gray-100">
                         <p class="font-medium text-gray-900 mb-3">問{{ $index + 1 }}. {{ $question->body }}</p>
+                        <input type="hidden" name="answers[{{ $index }}][question_id]" value="{{ $question->id }}">
                         <div class="space-y-2">
                             @foreach($question->options as $option)
                                 <label class="flex items-center p-3 rounded-lg hover:bg-white cursor-pointer transition-colors">
                                     <input type="radio" name="answers[{{ $index }}][option_id]" value="{{ $option->id }}"
                                         class="text-indigo-600 border-gray-300 focus:ring-indigo-500">
-                                    <input type="hidden" name="answers[{{ $index }}][question_id]" value="{{ $question->id }}">
                                     <span class="ml-3 text-sm text-gray-700">{{ $option->body }}</span>
                                 </label>
                             @endforeach
