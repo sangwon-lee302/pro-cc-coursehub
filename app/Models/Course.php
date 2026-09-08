@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Course extends Model
 {
@@ -48,6 +49,11 @@ class Course extends Model
         return $this->hasMany(Enrollment::class);
     }
 
+    public function lessons(): HasManyThrough
+    {
+        return $this->hasManyThrough(Lesson::class, Chapter::class);
+    }
+
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class, 'course_tag');
@@ -58,15 +64,9 @@ class Course extends Model
         return $query->where('status', 'published');
     }
 
-    // TODO: hasManyThrough(Lesson::class, Chapter::class) の lessons() リレーションを追加し、
-    // $this->lessons()->where('is_published', true)->pluck('id')->toArray() に置き換えられる。
-    // 現状は chapters() のクエリ結果を whereIn に渡す2クエリ構成だが、hasManyThrough なら JOIN で1クエリになる。
     public function getAllLessonIds(): array
     {
-        return Lesson::whereIn('chapter_id', $this->chapters()->pluck('id'))
-            ->where('is_published', true)
-            ->pluck('id')
-            ->toArray();
+        return $this->lessons()->where('is_published', true)->pluck('lessons.id')->toArray();
     }
 
     public function getProgressRate($userId): int
