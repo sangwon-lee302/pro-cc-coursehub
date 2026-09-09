@@ -57,11 +57,15 @@ class QuizController extends Controller
 
         $quiz->load('questions.options');
 
-        $submission = Submission::where('user_id', auth()->id())
+        $submissions = Submission::where('user_id', auth()->id())
             ->where('quiz_id', $quiz->id)
-            ->latest()
-            ->firstOrFail();
+            ->orderByDesc('submitted_at')
+            ->get();
 
-        return view('quizzes.result', compact('course', 'quiz', 'submission'));
+        $submission = $submissions->first();
+
+        abort_if(! $submission, 404);
+
+        return view('quizzes.result', compact('course', 'quiz', 'submission', 'submissions'));
     }
 }
