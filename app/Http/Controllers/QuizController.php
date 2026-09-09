@@ -54,8 +54,7 @@ class QuizController extends Controller
 
     public function result(Course $course, Quiz $quiz)
     {
-        $this->authorize('view', $course);
-        $this->authorize('view', [$quiz, $course]);
+        $this->authorize('result', [$quiz, $course]);
 
         $quiz->load('questions.options');
 
