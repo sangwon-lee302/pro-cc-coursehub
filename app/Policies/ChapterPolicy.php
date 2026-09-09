@@ -3,12 +3,13 @@
 namespace App\Policies;
 
 use App\Models\Chapter;
+use App\Models\Course;
 use App\Models\User;
 
 class ChapterPolicy
 {
-    public function manage(User $user, Chapter $chapter): bool
+    public function manage(User $user, Chapter $chapter, Course $course): bool
     {
-        return $user->id === $chapter->course->user_id;
+        return $chapter->belongsToCourse($course) && $user->id === $course->user_id;
     }
 }

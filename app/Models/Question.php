@@ -26,4 +26,9 @@ class Question extends Model
     {
         return $this->hasMany(Option::class);
     }
+
+    public function belongsToQuiz(Quiz $quiz): bool
+    {
+        return $this->quiz_id === $quiz->id;
+    }
 }

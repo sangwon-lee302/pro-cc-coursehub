@@ -26,4 +26,9 @@ class Chapter extends Model
     {
         return $this->hasMany(Lesson::class);
     }
+
+    public function belongsToCourse(Course $course): bool
+    {
+        return $this->course_id === $course->id;
+    }
 }

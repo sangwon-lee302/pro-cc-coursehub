@@ -13,7 +13,7 @@ class CoachLessonController extends Controller
 {
     public function index(Course $course, Chapter $chapter)
     {
-        $this->authorize('update', $course);
+        $this->authorize('manage', [$chapter, $course]);
 
         $lessons = $chapter->lessons()->orderBy('order')->get();
 
@@ -22,14 +22,14 @@ class CoachLessonController extends Controller
 
     public function create(Course $course, Chapter $chapter)
     {
-        $this->authorize('update', $course);
+        $this->authorize('manage', [$chapter, $course]);
 
         return view('coach.lessons.create', compact('course', 'chapter'));
     }
 
     public function store(StoreLessonRequest $request, Course $course, Chapter $chapter)
     {
-        $this->authorize('update', $course);
+        $this->authorize('manage', [$chapter, $course]);
 
         $maxOrder = $chapter->lessons()->max('order') ?? 0;
 
@@ -46,14 +46,14 @@ class CoachLessonController extends Controller
 
     public function edit(Course $course, Chapter $chapter, Lesson $lesson)
     {
-        $this->authorize('update', $course);
+        $this->authorize('manage', [$lesson, $chapter, $course]);
 
         return view('coach.lessons.edit', compact('course', 'chapter', 'lesson'));
     }
 
     public function update(UpdateLessonRequest $request, Course $course, Chapter $chapter, Lesson $lesson)
     {
-        $this->authorize('update', $course);
+        $this->authorize('manage', [$lesson, $chapter, $course]);
 
         $lesson->update([
             'title' => $request->validated()['title'],
@@ -67,7 +67,7 @@ class CoachLessonController extends Controller
 
     public function destroy(Course $course, Chapter $chapter, Lesson $lesson)
     {
-        $this->authorize('update', $course);
+        $this->authorize('manage', [$lesson, $chapter, $course]);
 
         $lesson->delete();
 

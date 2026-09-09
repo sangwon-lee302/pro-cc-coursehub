@@ -7,6 +7,7 @@ use App\Models\Course;
 // use App\Http\Requests\StoreChapterRequest;
 // use App\Http\Requests\UpdateChapterRequest;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ChapterController extends Controller
 {
@@ -47,14 +48,14 @@ class ChapterController extends Controller
 
     public function edit(Course $course, Chapter $chapter)
     {
-        $this->authorize('update', $course);
+        $this->authorize('manage', [$chapter, $course]);
 
         return view('coach.chapters.edit', compact('course', 'chapter'));
     }
 
     public function update(Request $request, Course $course, Chapter $chapter)
     {
-        $this->authorize('update', $course);
+        $this->authorize('manage', [$chapter, $course]);
 
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -68,7 +69,7 @@ class ChapterController extends Controller
 
     public function destroy(Course $course, Chapter $chapter)
     {
-        $this->authorize('update', $course);
+        $this->authorize('manage', [$chapter, $course]);
 
         $chapter->delete();
 
@@ -96,7 +97,7 @@ class ChapterController extends Controller
 
         $validated = $request->validate([
             'order' => ['required', 'array'],
-            'order.*' => ['integer', 'exists:chapters,id'],
+            'order.*' => ['integer', Rule::exists('chapters', 'id')->where('course_id', $course->id)],
         ]);
 
         foreach ($validated['order'] as $index => $chapterId) {
