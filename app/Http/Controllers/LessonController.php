@@ -26,8 +26,7 @@ class LessonController extends Controller
 
     public function complete(Course $course, Lesson $lesson)
     {
-        $this->authorize('view', $course);
-        $this->authorize('view', [$lesson, $course]);
+        $this->authorize('complete', [$lesson, $course]);
 
         LessonProgress::updateOrCreate(
             [
