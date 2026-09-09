@@ -16,6 +16,10 @@ class SubmissionPolicy
             return false;
         }
 
+        if (! $quiz->belongsToCourse($course)) {
+            return false;
+        }
+
         $isEnrolled = Enrollment::where('user_id', $user->id)
             ->where('course_id', $course->id)
             ->where('status', 'active')

@@ -13,6 +13,7 @@ class LessonController extends Controller
     public function show(Course $course, Lesson $lesson)
     {
         $this->authorize('view', $course);
+        $this->authorize('view', [$lesson, $course]);
 
         $course->load('chapters.lessons');
 
@@ -25,6 +26,9 @@ class LessonController extends Controller
 
     public function complete(Course $course, Lesson $lesson)
     {
+        $this->authorize('view', $course);
+        $this->authorize('view', [$lesson, $course]);
+
         LessonProgress::updateOrCreate(
             [
                 'user_id' => auth()->id(),

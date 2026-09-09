@@ -38,4 +38,14 @@ class Lesson extends Model
     {
         return $this->hasMany(LessonProgress::class);
     }
+
+    public function belongsToChapter(Chapter $chapter): bool
+    {
+        return $this->chapter_id === $chapter->id;
+    }
+
+    public function belongsToCourse(Course $course): bool
+    {
+        return $this->chapter->belongsToCourse($course);
+    }
 }

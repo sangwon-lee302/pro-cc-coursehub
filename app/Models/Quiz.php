@@ -35,4 +35,9 @@ class Quiz extends Model
     {
         return $this->hasMany(Submission::class);
     }
+
+    public function belongsToCourse(Course $course): bool
+    {
+        return $this->lesson->belongsToCourse($course);
+    }
 }

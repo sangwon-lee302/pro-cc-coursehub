@@ -13,7 +13,7 @@ class QuizManageController extends Controller
 {
     public function index(Course $course, Lesson $lesson)
     {
-        $this->authorize('update', $course);
+        $this->authorize('manage', [$lesson, $lesson->chapter, $course]);
 
         $quiz = $lesson->quiz;
         if ($quiz) {
@@ -25,7 +25,7 @@ class QuizManageController extends Controller
 
     public function store(Request $request, Course $course, Lesson $lesson)
     {
-        $this->authorize('update', $course);
+        $this->authorize('manage', [$lesson, $lesson->chapter, $course]);
 
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -40,7 +40,7 @@ class QuizManageController extends Controller
 
     public function update(Request $request, Course $course, Lesson $lesson)
     {
-        $this->authorize('update', $course);
+        $this->authorize('manage', [$lesson, $lesson->chapter, $course]);
 
         $quiz = $lesson->quiz;
         if (!$quiz) {
@@ -60,7 +60,7 @@ class QuizManageController extends Controller
 
     public function destroy(Course $course, Lesson $lesson)
     {
-        $this->authorize('update', $course);
+        $this->authorize('manage', [$lesson, $lesson->chapter, $course]);
 
         $quiz = $lesson->quiz;
         if ($quiz) {
@@ -73,7 +73,7 @@ class QuizManageController extends Controller
 
     public function storeQuestion(Request $request, Course $course, Lesson $lesson)
     {
-        $this->authorize('update', $course);
+        $this->authorize('manage', [$lesson, $lesson->chapter, $course]);
 
         $quiz = $lesson->quiz;
         if (!$quiz) {
@@ -108,7 +108,7 @@ class QuizManageController extends Controller
 
     public function destroyQuestion(Course $course, Lesson $lesson, Question $question)
     {
-        $this->authorize('update', $course);
+        $this->authorize('manage', [$question, $lesson, $course]);
 
         $question->delete();
 
