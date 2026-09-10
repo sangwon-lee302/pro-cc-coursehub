@@ -189,16 +189,16 @@ class QuizSubmissionTest extends TestCase
         $this->assertDatabaseCount('submissions', 3);
     }
 
-    public function test_unenrolled_student_cannot_view_quiz_result(): void
+    public function test_unenrolled_student_without_submission_gets_404_for_quiz_result(): void
     {
         $response = $this->actingAs($this->student)->get(
             route('courses.quizzes.result', [$this->course, $this->quiz])
         );
 
-        $response->assertStatus(403);
+        $response->assertStatus(404);
     }
 
-    public function test_student_with_cancelled_enrollment_cannot_view_quiz_result(): void
+    public function test_student_with_cancelled_enrollment_without_submission_gets_404_for_quiz_result(): void
     {
         $this->enroll('cancelled');
 
@@ -206,7 +206,7 @@ class QuizSubmissionTest extends TestCase
             route('courses.quizzes.result', [$this->course, $this->quiz])
         );
 
-        $response->assertStatus(403);
+        $response->assertStatus(404);
     }
 
     public function test_result_page_returns_404_when_no_submission_exists(): void
