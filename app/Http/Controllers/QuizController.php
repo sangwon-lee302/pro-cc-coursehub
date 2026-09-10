@@ -14,6 +14,11 @@ class QuizController extends Controller
         $this->authorize('view', $course);
         $this->authorize('view', [$quiz, $course]);
 
+        if (auth()->user()->isStudent() && $quiz->passedBy(auth()->user())) {
+            return redirect()->route('courses.quizzes.result', [$course, $quiz])
+                ->with('error', 'この小テストはすでに合格しています。');
+        }
+
         $quiz->load('questions.options');
 
         return view('quizzes.show', compact('course', 'quiz'));

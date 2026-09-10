@@ -40,4 +40,12 @@ class Quiz extends Model
     {
         return $this->lesson->belongsToCourse($course);
     }
+
+    public function passedBy(User $user): bool
+    {
+        return $this->submissions()
+            ->where('user_id', $user->id)
+            ->where('score', '>=', $this->passing_score)
+            ->exists();
+    }
 }

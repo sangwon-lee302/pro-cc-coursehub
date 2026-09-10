@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Course;
 use App\Models\Quiz;
-use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 
@@ -20,11 +19,6 @@ class SubmissionPolicy
             return false;
         }
 
-        $hasPassed = Submission::where('user_id', $user->id)
-            ->where('quiz_id', $quiz->id)
-            ->where('score', '>=', $quiz->passing_score)
-            ->exists();
-
-        return ! $hasPassed;
+        return ! $quiz->passedBy($user);
     }
 }
