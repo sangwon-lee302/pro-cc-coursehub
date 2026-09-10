@@ -331,6 +331,11 @@ class QuizSubmissionTest extends TestCase
         );
 
         $response->assertRedirect(route('courses.quizzes.result', [$this->course, $this->quiz]));
+        $response->assertSessionHas('error', 'この小テストはすでに合格しています。');
+
+        $this->actingAs($this->student)
+            ->get(route('courses.quizzes.result', [$this->course, $this->quiz]))
+            ->assertSee('この小テストはすでに合格しています。');
     }
 
     public function test_student_who_has_not_passed_can_visit_quiz_page(): void
