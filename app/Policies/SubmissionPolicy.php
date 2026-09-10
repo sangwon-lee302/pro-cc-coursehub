@@ -3,7 +3,6 @@
 namespace App\Policies;
 
 use App\Models\Course;
-use App\Models\Enrollment;
 use App\Models\Quiz;
 use App\Models\Submission;
 use App\Models\User;
@@ -12,20 +11,7 @@ class SubmissionPolicy
 {
     public function submit(User $user, Quiz $quiz, Course $course): bool
     {
-        if ($user->role !== 'student') {
-            return false;
-        }
-
-        if (! $quiz->belongsToCourse($course)) {
-            return false;
-        }
-
-        $isEnrolled = Enrollment::where('user_id', $user->id)
-            ->where('course_id', $course->id)
-            ->where('status', 'active')
-            ->exists();
-
-        if (! $isEnrolled) {
+        if (! $user->isStudent() || ! $quiz->belongsToCourse($course) || ! $user->isEnrolledIn($course)) {
             return false;
         }
 

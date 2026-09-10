@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Chapter;
 use App\Models\Course;
-use App\Models\Enrollment;
 use App\Models\Lesson;
 use App\Models\User;
 
@@ -24,17 +23,8 @@ class LessonPolicy
 
     public function complete(User $user, Lesson $lesson, Course $course): bool
     {
-        if ($user->role !== 'student') {
-            return false;
-        }
-
-        if (! $lesson->belongsToCourse($course)) {
-            return false;
-        }
-
-        return Enrollment::where('user_id', $user->id)
-            ->where('course_id', $course->id)
-            ->where('status', 'active')
-            ->exists();
+        return $user->isStudent()
+            && $lesson->belongsToCourse($course)
+            && $user->isEnrolledIn($course);
     }
 }
