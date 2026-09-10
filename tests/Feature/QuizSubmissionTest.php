@@ -145,6 +145,11 @@ class QuizSubmissionTest extends TestCase
 
         $response->assertRedirect(route('courses.show', $this->course));
         $this->assertDatabaseCount('submissions', 0);
+        $response->assertSessionHas('error', 'この小テストにはまだ問題がありません。');
+
+        $this->actingAs($this->student)
+            ->get(route('courses.show', $this->course))
+            ->assertSee('この小テストにはまだ問題がありません。');
     }
 
     public function test_student_cannot_resubmit_quiz_after_passing(): void
