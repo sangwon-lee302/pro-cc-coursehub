@@ -145,6 +145,11 @@ class QuizSubmissionTest extends TestCase
 
         $response->assertRedirect(route('courses.show', $this->course));
         $this->assertDatabaseCount('submissions', 0);
+        $response->assertSessionHas('error', 'この小テストにはまだ問題がありません。');
+
+        $this->actingAs($this->student)
+            ->get(route('courses.show', $this->course))
+            ->assertSee('この小テストにはまだ問題がありません。');
     }
 
     public function test_student_cannot_resubmit_quiz_after_passing(): void
@@ -331,6 +336,11 @@ class QuizSubmissionTest extends TestCase
         );
 
         $response->assertRedirect(route('courses.quizzes.result', [$this->course, $this->quiz]));
+        $response->assertSessionHas('error', 'この小テストはすでに合格しています。');
+
+        $this->actingAs($this->student)
+            ->get(route('courses.quizzes.result', [$this->course, $this->quiz]))
+            ->assertSee('この小テストはすでに合格しています。');
     }
 
     public function test_student_who_has_not_passed_can_visit_quiz_page(): void
