@@ -41,7 +41,7 @@ class QuizController extends Controller
 
         $score = (int) round($correctCount / $quiz->questions->count() * 100);
 
-        $submission = Submission::create([
+        Submission::create([
             'user_id' => auth()->id(),
             'quiz_id' => $quiz->id,
             'score' => $score,

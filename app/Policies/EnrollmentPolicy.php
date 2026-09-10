@@ -23,6 +23,6 @@ class EnrollmentPolicy
             ->whereIn('status', ['active', 'completed'])
             ->exists();
 
-        return !$alreadyEnrolled;
+        return ! $alreadyEnrolled;
     }
 }

@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\Lesson;
-use App\Models\Option;
 use App\Models\Question;
-use App\Models\Quiz;
 use Illuminate\Http\Request;
 
 class QuizManageController extends Controller
@@ -43,7 +41,7 @@ class QuizManageController extends Controller
         $this->authorize('manage', [$lesson, $lesson->chapter, $course]);
 
         $quiz = $lesson->quiz;
-        if (!$quiz) {
+        if (! $quiz) {
             abort(404);
         }
 
@@ -76,7 +74,7 @@ class QuizManageController extends Controller
         $this->authorize('manage', [$lesson, $lesson->chapter, $course]);
 
         $quiz = $lesson->quiz;
-        if (!$quiz) {
+        if (! $quiz) {
             abort(404);
         }
 

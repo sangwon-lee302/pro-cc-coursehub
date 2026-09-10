@@ -37,7 +37,7 @@ class EnrollmentService
 
         // 全公開レッスンの進捗レコードを一括作成
         $lessonIds = $course->chapters()
-            ->with(['lessons' => fn($q) => $q->where('is_published', true)])
+            ->with(['lessons' => fn ($q) => $q->where('is_published', true)])
             ->get()
             ->flatMap->lessons
             ->pluck('id');

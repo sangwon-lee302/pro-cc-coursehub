@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Course>
+ * @extends Factory<Course>
  */
 class CourseFactory extends Factory
 {
@@ -28,7 +28,7 @@ class CourseFactory extends Factory
             'user_id' => User::factory()->coach(),
             'category_id' => Category::factory(),
             'title' => $title,
-            'slug' => Str::slug($title) . '-' . Str::random(6),
+            'slug' => Str::slug($title).'-'.Str::random(6),
             'description' => fake()->paragraphs(3, true),
             'difficulty' => fake()->randomElement(['beginner', 'intermediate', 'advanced']),
             'image_path' => null,

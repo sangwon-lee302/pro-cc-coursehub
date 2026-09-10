@@ -6,7 +6,6 @@ use App\Events\CourseCompleted;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\LessonProgress;
-use Illuminate\Http\Request;
 
 class LessonController extends Controller
 {

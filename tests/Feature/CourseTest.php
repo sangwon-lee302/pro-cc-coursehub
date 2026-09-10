@@ -17,7 +17,9 @@ class CourseTest extends TestCase
     use RefreshDatabase;
 
     private User $coach;
+
     private User $student;
+
     private Category $category;
 
     protected function setUp(): void
