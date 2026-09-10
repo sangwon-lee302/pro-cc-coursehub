@@ -58,9 +58,9 @@
                                     @csrf
                                     @method('PUT')
                                     <select name="role" class="text-sm rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 px-2 py-1.5 border">
-                                        <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>admin</option>
-                                        <option value="coach" {{ $user->role === 'coach' ? 'selected' : '' }}>coach</option>
-                                        <option value="student" {{ $user->role === 'student' ? 'selected' : '' }}>student</option>
+                                        <option value="admin" {{ $user->isAdmin() ? 'selected' : '' }}>admin</option>
+                                        <option value="coach" {{ $user->isCoach() ? 'selected' : '' }}>coach</option>
+                                        <option value="student" {{ $user->isStudent() ? 'selected' : '' }}>student</option>
                                     </select>
                                     <button type="submit" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">変更</button>
                                 </form>
