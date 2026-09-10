@@ -15,8 +15,8 @@ use App\Models\Submission;
 use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
@@ -81,25 +81,25 @@ class DatabaseSeeder extends Seeder
             // ================================================================
             $courseConfigs = [
                 ['coach' => 0, 'title' => 'Laravel入門',          'slug' => 'laravel-intro',       'cat' => 0, 'status' => 'published', 'difficulty' => 'beginner',     'tags' => [0, 1, 8],
-                 'description' => "Laravelフレームワークの基礎を学ぶ入門コースです。\n\nMVCアーキテクチャの概念から、ルーティング、コントローラー、Eloquent ORMまで、Webアプリケーション開発に必要な基本スキルを身につけます。実際にブログアプリケーションを構築しながら、Laravelの魅力を体感できます。"],
+                    'description' => "Laravelフレームワークの基礎を学ぶ入門コースです。\n\nMVCアーキテクチャの概念から、ルーティング、コントローラー、Eloquent ORMまで、Webアプリケーション開発に必要な基本スキルを身につけます。実際にブログアプリケーションを構築しながら、Laravelの魅力を体感できます。"],
                 ['coach' => 0, 'title' => 'PHPオブジェクト指向',   'slug' => 'php-oop',             'cat' => 0, 'status' => 'published', 'difficulty' => 'intermediate', 'tags' => [0],
-                 'description' => "PHPにおけるオブジェクト指向プログラミングを体系的に学びます。\n\nクラスとオブジェクトの基本から、継承、インターフェース、トレイト、デザインパターンまで、保守性の高いコードを書くための設計手法を習得します。"],
+                    'description' => "PHPにおけるオブジェクト指向プログラミングを体系的に学びます。\n\nクラスとオブジェクトの基本から、継承、インターフェース、トレイト、デザインパターンまで、保守性の高いコードを書くための設計手法を習得します。"],
                 ['coach' => 0, 'title' => 'Laravel API開発',      'slug' => 'laravel-api',         'cat' => 0, 'status' => 'draft',     'difficulty' => 'advanced',     'tags' => [0, 1],
-                 'description' => "LaravelでRESTful APIを設計・実装する方法を学ぶ上級コースです。\n\n認証（Sanctum）、リソースクラス、APIバージョニング、テスト駆動開発など、本番レベルのAPI構築スキルを身につけます。"],
+                    'description' => "LaravelでRESTful APIを設計・実装する方法を学ぶ上級コースです。\n\n認証（Sanctum）、リソースクラス、APIバージョニング、テスト駆動開発など、本番レベルのAPI構築スキルを身につけます。"],
                 ['coach' => 0, 'title' => 'Docker実践',           'slug' => 'docker-practice',     'cat' => 3, 'status' => 'published', 'difficulty' => 'intermediate', 'tags' => [5, 14],
-                 'description' => "Dockerを使ったコンテナベースの開発環境構築を実践的に学びます。\n\nDockerfileの書き方、Docker Composeによるマルチコンテナ構成、ボリューム管理、ネットワーク設定など、実務で使えるDockerスキルを習得します。"],
+                    'description' => "Dockerを使ったコンテナベースの開発環境構築を実践的に学びます。\n\nDockerfileの書き方、Docker Composeによるマルチコンテナ構成、ボリューム管理、ネットワーク設定など、実務で使えるDockerスキルを習得します。"],
                 ['coach' => 1, 'title' => 'JavaScript基礎',      'slug' => 'javascript-basics',   'cat' => 0, 'status' => 'published', 'difficulty' => 'beginner',     'tags' => [2, 13, 12],
-                 'description' => "JavaScriptプログラミングの基礎を一から学ぶコースです。\n\n変数、関数、配列、オブジェクトなどの基本文法から、DOM操作、イベント処理、非同期処理まで、フロントエンド開発の土台を築きます。"],
+                    'description' => "JavaScriptプログラミングの基礎を一から学ぶコースです。\n\n変数、関数、配列、オブジェクトなどの基本文法から、DOM操作、イベント処理、非同期処理まで、フロントエンド開発の土台を築きます。"],
                 ['coach' => 1, 'title' => 'React入門',            'slug' => 'react-intro',         'cat' => 0, 'status' => 'published', 'difficulty' => 'intermediate', 'tags' => [2, 3],
-                 'description' => "Reactを使ったモダンなフロントエンド開発を学びます。\n\nコンポーネント設計、JSX、State管理、Hooks、React Routerなど、SPA（シングルページアプリケーション）を構築するための知識を身につけます。"],
+                    'description' => "Reactを使ったモダンなフロントエンド開発を学びます。\n\nコンポーネント設計、JSX、State管理、Hooks、React Routerなど、SPA（シングルページアプリケーション）を構築するための知識を身につけます。"],
                 ['coach' => 1, 'title' => 'TypeScript実践',       'slug' => 'typescript-practice', 'cat' => 0, 'status' => 'archived',  'difficulty' => 'advanced',     'tags' => [2, 10],
-                 'description' => "TypeScriptの型システムを活用した堅牢なアプリケーション開発を学びます。\n\nジェネリクス、ユーティリティ型、型ガードなど、TypeScriptの高度な機能を実践的に習得します。"],
+                    'description' => "TypeScriptの型システムを活用した堅牢なアプリケーション開発を学びます。\n\nジェネリクス、ユーティリティ型、型ガードなど、TypeScriptの高度な機能を実践的に習得します。"],
                 ['coach' => 2, 'title' => 'MySQL基礎',            'slug' => 'mysql-basics',        'cat' => 2, 'status' => 'published', 'difficulty' => 'beginner',     'tags' => [8],
-                 'description' => "MySQLデータベースの基礎を学ぶコースです。\n\nテーブル設計、SQL文の書き方、インデックス、正規化など、データベース管理の基本スキルを身につけます。"],
+                    'description' => "MySQLデータベースの基礎を学ぶコースです。\n\nテーブル設計、SQL文の書き方、インデックス、正規化など、データベース管理の基本スキルを身につけます。"],
                 ['coach' => 2, 'title' => 'AWS入門',              'slug' => 'aws-intro',           'cat' => 3, 'status' => 'published', 'difficulty' => 'intermediate', 'tags' => [7, 14],
-                 'description' => "AWSクラウドサービスの基礎を学ぶ入門コースです。\n\nEC2、S3、RDS、VPCなど、主要サービスの使い方と設計のベストプラクティスを学びます。"],
+                    'description' => "AWSクラウドサービスの基礎を学ぶ入門コースです。\n\nEC2、S3、RDS、VPCなど、主要サービスの使い方と設計のベストプラクティスを学びます。"],
                 ['coach' => 2, 'title' => 'Python機械学習',       'slug' => 'python-ml',           'cat' => 4, 'status' => 'published', 'difficulty' => 'advanced',     'tags' => [9],
-                 'description' => "Pythonを使った機械学習の基礎から応用までを学ぶコースです。\n\nNumPy、Pandas、scikit-learnを活用し、データ前処理、モデル構築、評価手法を実践的に習得します。"],
+                    'description' => "Pythonを使った機械学習の基礎から応用までを学ぶコースです。\n\nNumPy、Pandas、scikit-learnを活用し、データ前処理、モデル構築、評価手法を実践的に習得します。"],
             ];
 
             $courses = collect();
@@ -282,7 +282,7 @@ class DatabaseSeeder extends Seeder
                     // Use generic templates
                     $numChapters = fake()->numberBetween(2, 3);
                     for ($c = 0; $c < $numChapters; $c++) {
-                        $chapterTitle = $genericChapters[$c]['title'] ?? "第" . ($c + 1) . "章";
+                        $chapterTitle = $genericChapters[$c]['title'] ?? '第'.($c + 1).'章';
                         $chapter = Chapter::create([
                             'course_id' => $course->id,
                             'title' => $chapterTitle,
@@ -334,13 +334,14 @@ class DatabaseSeeder extends Seeder
             foreach ($lessonsForQuiz as $lesson) {
                 $quiz = Quiz::create([
                     'lesson_id' => $lesson->id,
-                    'title' => $lesson->title . ' 確認テスト',
+                    'title' => $lesson->title.' 確認テスト',
                     'passing_score' => fake()->randomElement([60, 70, 80]),
                 ]);
 
                 // Bug 3-3-3: First quiz is empty (0 questions)
                 if ($quizCount === 0) {
                     $quizCount++;
+
                     continue;
                 }
 
@@ -376,7 +377,7 @@ class DatabaseSeeder extends Seeder
                 $numEnrollments = fake()->numberBetween(1, 3);
                 $enrolledCourses = $publishedCourses->random(min($numEnrollments, $publishedCourses->count()));
 
-                if (!$enrolledCourses instanceof \Illuminate\Support\Collection) {
+                if (! $enrolledCourses instanceof Collection) {
                     $enrolledCourses = collect([$enrolledCourses]);
                 }
 
@@ -427,7 +428,9 @@ class DatabaseSeeder extends Seeder
                 $someStudents = $students->random(3);
                 foreach ($someStudents as $student) {
                     $existing = $enrollments->where('user_id', $student->id)->where('course_id', $firstCourse->id)->first();
-                    if ($existing) continue;
+                    if ($existing) {
+                        continue;
+                    }
 
                     $enrollment = Enrollment::create([
                         'user_id' => $student->id,
@@ -450,7 +453,9 @@ class DatabaseSeeder extends Seeder
                 $courseLessons = $courseLessonsMap[$enrollment->course_id] ?? collect();
                 $publishedCourseLessons = $courseLessons->filter(fn ($l) => $l->is_published);
 
-                if ($publishedCourseLessons->isEmpty()) continue;
+                if ($publishedCourseLessons->isEmpty()) {
+                    continue;
+                }
 
                 foreach ($publishedCourseLessons as $lesson) {
                     if ($enrollment->status === 'completed') {
@@ -504,12 +509,14 @@ class DatabaseSeeder extends Seeder
                     ->pluck('user_id')
                     ->unique();
 
-                if ($enrolledStudentIds->isEmpty()) continue;
+                if ($enrolledStudentIds->isEmpty()) {
+                    continue;
+                }
 
                 $numStudents = min(fake()->numberBetween(3, 6), $enrolledStudentIds->count());
                 $studentsForQuiz = $enrolledStudentIds->random($numStudents);
 
-                if (!$studentsForQuiz instanceof \Illuminate\Support\Collection) {
+                if (! $studentsForQuiz instanceof Collection) {
                     $studentsForQuiz = collect([$studentsForQuiz]);
                 }
 
@@ -520,12 +527,16 @@ class DatabaseSeeder extends Seeder
 
                     foreach ($questions as $question) {
                         $options = $question->options;
-                        if ($options->isEmpty()) continue;
+                        if ($options->isEmpty()) {
+                            continue;
+                        }
 
                         $pickCorrect = fake()->boolean(60);
                         if ($pickCorrect) {
                             $selected = $options->firstWhere('is_correct', true) ?? $options->first();
-                            if ($selected->is_correct) $correctCount++;
+                            if ($selected->is_correct) {
+                                $correctCount++;
+                            }
                         } else {
                             $wrongOptions = $options->where('is_correct', false);
                             $selected = $wrongOptions->isNotEmpty() ? $wrongOptions->random() : $options->first();
@@ -549,7 +560,9 @@ class DatabaseSeeder extends Seeder
                     ]);
 
                     $submissionCount++;
-                    if ($submissionCount >= 50) break 2;
+                    if ($submissionCount >= 50) {
+                        break 2;
+                    }
                 }
             }
 
@@ -563,7 +576,9 @@ class DatabaseSeeder extends Seeder
                     ->pluck('user_id')
                     ->unique();
 
-                if ($enrolledStudentIds->isEmpty()) continue;
+                if ($enrolledStudentIds->isEmpty()) {
+                    continue;
+                }
 
                 $studentId = $enrolledStudentIds->random();
                 $existingSubmission = Submission::where('user_id', $studentId)
@@ -579,7 +594,9 @@ class DatabaseSeeder extends Seeder
                     $answers = [];
                     foreach ($questions as $question) {
                         $options = $question->options;
-                        if ($options->isEmpty()) continue;
+                        if ($options->isEmpty()) {
+                            continue;
+                        }
                         $wrongOptions = $options->where('is_correct', false);
                         $selected = $wrongOptions->isNotEmpty() ? $wrongOptions->random() : $options->first();
                         $answers[] = ['question_id' => $question->id, 'option_id' => $selected->id];

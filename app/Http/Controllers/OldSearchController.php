@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Course;
 use App\Models\Category;
+use App\Models\Course;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 
@@ -27,7 +27,7 @@ class OldSearchController extends Controller
         if ($keyword) {
             $query->where(function ($q) use ($keyword) {
                 $q->where('title', 'LIKE', "%{$keyword}%")
-                  ->orWhere('description', 'LIKE', "%{$keyword}%");
+                    ->orWhere('description', 'LIKE', "%{$keyword}%");
             });
         }
 

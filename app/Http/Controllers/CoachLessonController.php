@@ -7,7 +7,6 @@ use App\Http\Requests\UpdateLessonRequest;
 use App\Models\Chapter;
 use App\Models\Course;
 use App\Models\Lesson;
-use Illuminate\Http\Request;
 
 class CoachLessonController extends Controller
 {
