@@ -82,4 +82,12 @@ class User extends Authenticatable
     {
         return $this->role === 'student';
     }
+
+    public function isEnrolledIn(Course $course): bool
+    {
+        return $this->enrollments()
+            ->where('course_id', $course->id)
+            ->where('status', 'active')
+            ->exists();
+    }
 }
