@@ -21,7 +21,6 @@ class QuizPolicy
     public function result(User $user, Quiz $quiz, Course $course): bool
     {
         return $user->isStudent()
-            && $quiz->belongsToCourse($course)
-            && $user->isEnrolledIn($course);
+            && $quiz->belongsToCourse($course);
     }
 }

@@ -6,6 +6,7 @@ use App\Models\Chapter;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 
 class LessonPolicy
 {
@@ -23,7 +24,8 @@ class LessonPolicy
 
     public function complete(User $user, Lesson $lesson, Course $course): bool
     {
-        return $user->isStudent()
+        return Gate::forUser($user)->allows('view', $course)
+            && $user->isStudent()
             && $lesson->belongsToCourse($course)
             && $user->isEnrolledIn($course);
     }
