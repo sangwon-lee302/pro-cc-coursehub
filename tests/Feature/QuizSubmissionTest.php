@@ -239,6 +239,41 @@ class QuizSubmissionTest extends TestCase
         $response->assertSee('90%');
     }
 
+    public function test_result_page_lists_submission_history_newest_first(): void
+    {
+        $this->enroll();
+
+        $oldest = Submission::factory()->create([
+            'user_id' => $this->student->id,
+            'quiz_id' => $this->quiz->id,
+            'score' => 10,
+            'submitted_at' => now()->subDays(2),
+        ]);
+        $middle = Submission::factory()->create([
+            'user_id' => $this->student->id,
+            'quiz_id' => $this->quiz->id,
+            'score' => 40,
+            'submitted_at' => now()->subDay(),
+        ]);
+        $newest = Submission::factory()->create([
+            'user_id' => $this->student->id,
+            'quiz_id' => $this->quiz->id,
+            'score' => 90,
+            'submitted_at' => now(),
+        ]);
+
+        $response = $this->actingAs($this->student)->get(
+            route('courses.quizzes.result', [$this->course, $this->quiz])
+        );
+
+        $response->assertOk();
+        $response->assertViewHas(
+            'submissions',
+            fn ($submissions) => $submissions->pluck('id')->all() === [$newest->id, $middle->id, $oldest->id]
+        );
+        $response->assertSeeInOrder(['90%', '40%', '10%']);
+    }
+
     public function test_result_page_uses_latest_submission_for_score(): void
     {
         $this->enroll();
@@ -279,6 +314,40 @@ class QuizSubmissionTest extends TestCase
         );
 
         $response->assertSee('再受験する');
+    }
+
+    public function test_student_who_already_passed_is_redirected_to_result_page_when_visiting_quiz(): void
+    {
+        $this->enroll();
+
+        Submission::factory()->create([
+            'user_id' => $this->student->id,
+            'quiz_id' => $this->quiz->id,
+            'score' => $this->quiz->passing_score,
+        ]);
+
+        $response = $this->actingAs($this->student)->get(
+            route('courses.quizzes.show', [$this->course, $this->quiz])
+        );
+
+        $response->assertRedirect(route('courses.quizzes.result', [$this->course, $this->quiz]));
+    }
+
+    public function test_student_who_has_not_passed_can_visit_quiz_page(): void
+    {
+        $this->enroll();
+
+        Submission::factory()->create([
+            'user_id' => $this->student->id,
+            'quiz_id' => $this->quiz->id,
+            'score' => $this->quiz->passing_score - 1,
+        ]);
+
+        $response = $this->actingAs($this->student)->get(
+            route('courses.quizzes.show', [$this->course, $this->quiz])
+        );
+
+        $response->assertOk();
     }
 
     public function test_retake_button_is_hidden_when_latest_submission_passed(): void
