@@ -12,7 +12,7 @@ class SubmissionPolicy
 {
     public function submit(User $user, Quiz $quiz, Course $course): bool
     {
-        if (! Gate::forUser($user)->allows('view', $course)) {
+        if (Gate::forUser($user)->denies('view', $course)) {
             return false;
         }
 
