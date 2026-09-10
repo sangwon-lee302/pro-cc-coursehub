@@ -10,7 +10,7 @@ class EnrollmentPolicy
 {
     public function enroll(User $user, Course $course): bool
     {
-        if ($user->role !== 'student') {
+        if (! $user->isStudent()) {
             return false;
         }
 

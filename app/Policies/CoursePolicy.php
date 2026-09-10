@@ -14,7 +14,7 @@ class CoursePolicy
 
     public function view(User $user, Course $course): bool
     {
-        if ($user->role === 'admin' || $course->user_id === $user->id) {
+        if ($user->isAdmin() || $course->user_id === $user->id) {
             return true;
         }
 
@@ -23,7 +23,7 @@ class CoursePolicy
 
     public function create(User $user): bool
     {
-        return $user->role === 'coach';
+        return $user->isCoach();
     }
 
     public function update(User $user, Course $course): bool
