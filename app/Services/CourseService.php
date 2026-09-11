@@ -6,6 +6,7 @@ use App\Models\Chapter;
 use App\Models\Course;
 use App\Models\Tag;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 
@@ -63,7 +64,7 @@ class CourseService
         $path = $image->storeAs('courses', $fileName, 'public');
 
         if (! $path) {
-            throw new \Exception('画像のアップロードに失敗しました。');
+            throw new Exception('画像のアップロードに失敗しました。');
         }
 
         return $path;
