@@ -6,6 +6,7 @@ use App\Models\Chapter;
 use App\Models\Course;
 use App\Models\Tag;
 use App\Models\User;
+use App\Support\SlugGenerator;
 use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
@@ -40,22 +41,7 @@ class CourseService
 
     private function generateUniqueSlug(string $title): string
     {
-        $slug = Str::slug($title);
-
-        // 空のスラッグ対策（日本語タイトルの場合）
-        if (empty($slug)) {
-            $slug = 'course-'.time();
-        }
-
-        $originalSlug = $slug;
-        $count = 1;
-
-        while (Course::where('slug', $slug)->exists()) {
-            $slug = $originalSlug.'-'.$count;
-            $count++;
-        }
-
-        return $slug;
+        return SlugGenerator::unique('courses', $title, 'course');
     }
 
     private function storeImage(UploadedFile $image): string
