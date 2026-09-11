@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateUserRoleRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class AdminUserController extends Controller
 {
@@ -29,11 +29,9 @@ class AdminUserController extends Controller
         return view('admin.users.index', compact('users'));
     }
 
-    public function updateRole(Request $request, User $user)
+    public function updateRole(UpdateUserRoleRequest $request, User $user)
     {
-        $validated = $request->validate([
-            'role' => ['required', Rule::in(['admin', 'coach', 'student'])],
-        ]);
+        $validated = $request->validated();
 
         $user->update(['role' => $validated['role']]);
 

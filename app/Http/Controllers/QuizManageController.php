@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreQuestionRequest;
+use App\Http\Requests\StoreQuizRequest;
+use App\Http\Requests\UpdateQuizRequest;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\Question;
-use Illuminate\Http\Request;
 
 class QuizManageController extends Controller
 {
@@ -21,14 +23,11 @@ class QuizManageController extends Controller
         return view('coach.quizzes.index', compact('course', 'lesson', 'quiz'));
     }
 
-    public function store(Request $request, Course $course, Lesson $lesson)
+    public function store(StoreQuizRequest $request, Course $course, Lesson $lesson)
     {
         $this->authorize('manage', [$lesson, $lesson->chapter, $course]);
 
-        $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'passing_score' => ['required', 'integer', 'min:0', 'max:100'],
-        ]);
+        $validated = $request->validated();
 
         $lesson->quiz()->create($validated);
 
@@ -36,7 +35,7 @@ class QuizManageController extends Controller
             ->with('success', '小テストを作成しました。');
     }
 
-    public function update(Request $request, Course $course, Lesson $lesson)
+    public function update(UpdateQuizRequest $request, Course $course, Lesson $lesson)
     {
         $this->authorize('manage', [$lesson, $lesson->chapter, $course]);
 
@@ -45,10 +44,7 @@ class QuizManageController extends Controller
             abort(404);
         }
 
-        $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'passing_score' => ['required', 'integer', 'min:0', 'max:100'],
-        ]);
+        $validated = $request->validated();
 
         $quiz->update($validated);
 
@@ -69,7 +65,7 @@ class QuizManageController extends Controller
             ->with('success', '小テストを削除しました。');
     }
 
-    public function storeQuestion(Request $request, Course $course, Lesson $lesson)
+    public function storeQuestion(StoreQuestionRequest $request, Course $course, Lesson $lesson)
     {
         $this->authorize('manage', [$lesson, $lesson->chapter, $course]);
 
@@ -78,13 +74,7 @@ class QuizManageController extends Controller
             abort(404);
         }
 
-        $validated = $request->validate([
-            'body' => ['required', 'string'],
-            'options' => ['required', 'array', 'min:2'],
-            'options.*.body' => ['required', 'string'],
-            'options.*.is_correct' => ['boolean'],
-            'correct_option' => ['required', 'integer'],
-        ]);
+        $validated = $request->validated();
 
         $maxOrder = $quiz->questions()->max('order') ?? 0;
 

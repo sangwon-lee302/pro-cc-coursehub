@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateProfileRequest;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
@@ -11,13 +12,9 @@ class ProfileController extends Controller
         return view('profile.edit', ['user' => $request->user()]);
     }
 
-    public function update(Request $request)
+    public function update(UpdateProfileRequest $request)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'bio' => ['nullable', 'string', 'max:1000'],
-            'avatar_url' => ['nullable', 'url', 'max:255'],
-        ]);
+        $validated = $request->validated();
 
         $request->user()->update($validated);
 
