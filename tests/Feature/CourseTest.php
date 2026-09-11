@@ -188,6 +188,20 @@ class CourseTest extends TestCase
         ]);
     }
 
+    public function test_course_update_fails_validation_when_required_fields_are_missing(): void
+    {
+        $course = Course::factory()->create([
+            'user_id' => $this->coach->id,
+            'category_id' => $this->category->id,
+            'title' => '元のタイトル',
+        ]);
+
+        $response = $this->actingAs($this->coach)->put("/coach/courses/{$course->id}", []);
+
+        $response->assertSessionHasErrors(['title', 'category_id', 'description', 'difficulty', 'status']);
+        $this->assertSame('元のタイトル', $course->fresh()->title);
+    }
+
     public function test_coach_can_delete_own_course(): void
     {
         $course = Course::factory()->create([
