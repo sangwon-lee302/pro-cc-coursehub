@@ -69,5 +69,64 @@
             </div>
         @endforeach
     </div>
+
+    {{-- レビュー --}}
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mt-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">レビュー</h2>
+
+        @if($reviews->isEmpty())
+            <p class="text-sm text-gray-500 mb-4">まだレビューはありません。</p>
+        @else
+            <ul class="space-y-4 mb-6">
+                @foreach($reviews as $review)
+                    <li class="border-b border-gray-100 pb-4 last:border-b-0 last:pb-0">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="font-medium text-gray-900 text-sm">{{ $review->user->name }}</span>
+                            <span class="text-xs text-gray-400">{{ $review->created_at->format('Y/m/d') }}</span>
+                        </div>
+                        <div class="text-amber-500 text-sm mb-1">
+                            {{ str_repeat('★', $review->rating) }}{{ str_repeat('☆', 5 - $review->rating) }}
+                        </div>
+                        @if($review->comment)
+                            <p class="text-sm text-gray-700 leading-relaxed">{{ $review->comment }}</p>
+                        @endif
+                    </li>
+                @endforeach
+            </ul>
+        @endif
+
+        @if(auth()->user()->isStudent())
+            @if($canReview)
+                <form method="POST" action="{{ route('courses.reviews.store', $course) }}" class="border-t border-gray-100 pt-4">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="rating" class="block text-sm font-medium text-gray-700 mb-1">評価</label>
+                        <select id="rating" name="rating" class="rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2.5 border text-sm">
+                            <option value="5">★★★★★ (5)</option>
+                            <option value="4">★★★★☆ (4)</option>
+                            <option value="3">★★★☆☆ (3)</option>
+                            <option value="2">★★☆☆☆ (2)</option>
+                            <option value="1">★☆☆☆☆ (1)</option>
+                        </select>
+                        @error('rating')
+                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="comment" class="block text-sm font-medium text-gray-700 mb-1">コメント（任意）</label>
+                        <textarea id="comment" name="comment" rows="3" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2.5 border text-sm">{{ old('comment') }}</textarea>
+                        @error('comment')
+                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg px-5 py-2.5 shadow-sm transition-all duration-150">レビューを投稿</button>
+                </form>
+            @elseif($hasReviewed)
+                <p class="text-sm text-gray-500 border-t border-gray-100 pt-4">このコースへのレビューは投稿済みです。</p>
+            @else
+                <p class="text-sm text-gray-500 border-t border-gray-100 pt-4">コースを修了するとレビューを投稿できます。</p>
+            @endif
+        @endif
+    </div>
 </div>
 @endsection
