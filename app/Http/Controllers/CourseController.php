@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Course;
+use App\Models\Review;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
@@ -42,7 +43,13 @@ class CourseController extends Controller
         $this->authorize('view', $course);
 
         // コース関連データを一括取得
-        $course->load('chapters.lessons', 'user', 'category', 'tags');
+        $course->load([
+            'chapters.lessons',
+            'user',
+            'category',
+            'tags',
+            'reviews' => fn ($query) => $query->with('user')->latest(),
+        ]);
 
         $enrollment = null;
         if (auth()->user()->isStudent()) {
@@ -51,6 +58,11 @@ class CourseController extends Controller
                 ->first();
         }
 
-        return view('courses.show', compact('course', 'enrollment'));
+        $reviews = $course->reviews;
+        $canReview = auth()->user()->can('create', [Review::class, $course]);
+        $hasReviewed = auth()->user()->isStudent()
+            && $course->reviews->contains('user_id', auth()->id());
+
+        return view('courses.show', compact('course', 'enrollment', 'reviews', 'canReview', 'hasReviewed'));
     }
 }

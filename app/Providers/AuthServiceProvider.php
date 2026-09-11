@@ -7,12 +7,14 @@ use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\Question;
 use App\Models\Quiz;
+use App\Models\Review;
 use App\Models\Submission;
 use App\Policies\ChapterPolicy;
 use App\Policies\CoursePolicy;
 use App\Policies\LessonPolicy;
 use App\Policies\QuestionPolicy;
 use App\Policies\QuizPolicy;
+use App\Policies\ReviewPolicy;
 use App\Policies\SubmissionPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -25,6 +27,7 @@ class AuthServiceProvider extends ServiceProvider
         Quiz::class => QuizPolicy::class,
         Question::class => QuestionPolicy::class,
         Submission::class => SubmissionPolicy::class,
+        Review::class => ReviewPolicy::class,
     ];
 
     public function boot(): void
