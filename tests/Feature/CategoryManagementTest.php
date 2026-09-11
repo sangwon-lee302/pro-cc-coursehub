@@ -43,4 +43,22 @@ class CategoryManagementTest extends TestCase
 
         $this->assertSame($originalSlug, $category->fresh()->slug);
     }
+
+    public function test_category_creation_fails_validation_without_name(): void
+    {
+        $response = $this->actingAs($this->admin)->post('/admin/categories', []);
+
+        $response->assertSessionHasErrors('name');
+        $this->assertDatabaseCount('categories', 0);
+    }
+
+    public function test_category_update_fails_validation_without_name(): void
+    {
+        $category = Category::factory()->create();
+
+        $response = $this->actingAs($this->admin)->put("/admin/categories/{$category->id}", []);
+
+        $response->assertSessionHasErrors('name');
+        $this->assertSame($category->name, $category->fresh()->name);
+    }
 }
