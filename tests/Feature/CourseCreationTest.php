@@ -127,6 +127,23 @@ class CourseCreationTest extends TestCase
         ]);
     }
 
+    public function test_course_creation_creates_distinct_tags_for_non_ascii_only_names_sharing_a_slug(): void
+    {
+        $this->actingAs($this->coach)->post('/coach/courses', $this->validPayload([
+            'new_tags' => 'モバイル,データベース',
+        ]));
+
+        $course = Course::where('title', 'テストコース')->firstOrFail();
+
+        $mobile = Tag::where('name', 'モバイル')->firstOrFail();
+        $database = Tag::where('name', 'データベース')->firstOrFail();
+
+        $this->assertNotSame($mobile->id, $database->id);
+        $this->assertNotSame($mobile->slug, $database->slug);
+        $this->assertDatabaseHas('course_tag', ['course_id' => $course->id, 'tag_id' => $mobile->id]);
+        $this->assertDatabaseHas('course_tag', ['course_id' => $course->id, 'tag_id' => $database->id]);
+    }
+
     public function test_course_creation_stores_uploaded_image(): void
     {
         Storage::fake('public');

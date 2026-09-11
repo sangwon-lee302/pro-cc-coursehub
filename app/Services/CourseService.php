@@ -64,10 +64,13 @@ class CourseService
                     continue;
                 }
 
-                $tag = Tag::firstOrCreate(
-                    ['slug' => Str::slug($tagName)],
-                    ['name' => $tagName]
-                );
+                $slug = Str::slug($tagName);
+
+                // 非ASCII文字のみのタグ名は slug が空文字列になり区別できないため、
+                // その場合は name の完全一致でタグを探す
+                $tag = $slug !== ''
+                    ? Tag::firstOrCreate(['slug' => $slug], ['name' => $tagName])
+                    : Tag::firstOrCreate(['name' => $tagName], ['slug' => SlugGenerator::unique('tags', $tagName, 'tag')]);
 
                 if (! in_array($tag->id, $tagIds)) {
                     $tagIds[] = $tag->id;
