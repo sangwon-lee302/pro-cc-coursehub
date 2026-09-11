@@ -8,5 +8,20 @@
       "Bash(./vendor/bin/sail test *)",
       "Bash(git *)"
     ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "ROOT=\"${CLAUDE_PROJECT_DIR:-$(pwd)}\"; jq -r '.tool_input.file_path // .tool_input.notebook_path // empty' | { read -r f; f=\"${f#$ROOT/}\"; case \"$f\" in *.php) cd \"$ROOT\"; OUT=$(./vendor/bin/sail pint --test 2>&1); CODE=$?; if [ \"$CODE\" -ne 0 ]; then jq -n --arg reason \"$OUT\" '{decision:\"block\", reason:$reason}'; fi ;; esac; }",
+            "timeout": 60,
+            "statusMessage": "Running Pint lint check (/lint)..."
+          }
+        ]
+      }
+    ]
   }
 }
