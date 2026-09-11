@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Course;
 use App\Models\Tag;
 use App\Services\CourseService;
+use Illuminate\Support\Facades\Log;
 
 class CoachCourseController extends Controller
 {
@@ -58,7 +59,7 @@ class CoachCourseController extends Controller
                 $request->file('image')
             );
         } catch (\Exception $e) {
-            \Log::error('コース作成エラー: '.$e->getMessage(), [
+            Log::error('コース作成エラー: '.$e->getMessage(), [
                 'user_id' => auth()->id(),
                 'request_data' => $request->except(['image']),
                 'trace' => $e->getTraceAsString(),
