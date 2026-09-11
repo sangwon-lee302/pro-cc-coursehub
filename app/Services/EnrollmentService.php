@@ -6,6 +6,7 @@ use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\LessonProgress;
 use App\Models\User;
+use Exception;
 
 /**
  * 受講登録に関するビジネスロジックを集約するサービスクラス
@@ -19,12 +20,12 @@ class EnrollmentService
     {
         // 受講済みチェック（重複登録防止）
         if ($user->enrollments()->where('course_id', $course->id)->exists()) {
-            throw new \Exception('既に受講登録済みです');
+            throw new Exception('既に受講登録済みです');
         }
 
         // コース公開チェック
         if ($course->status !== 'published') {
-            throw new \Exception('このコースは現在受講できません');
+            throw new Exception('このコースは現在受講できません');
         }
 
         // Enrollment 作成
