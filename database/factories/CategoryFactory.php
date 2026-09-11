@@ -21,10 +21,13 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         $name = fake()->unique()->randomElement(['Web開発', 'モバイル', 'データベース', 'インフラ', 'AI/ML']);
+        $slug = Str::slug($name);
 
         return [
             'name' => $name,
-            'slug' => Str::slug($name),
+            // 日本語のみの名前は Str::slug() が空文字列を返すため、
+            // その場合はランダムな文字列からスラッグを生成して衝突を防ぐ
+            'slug' => $slug !== '' ? $slug : Str::slug($name.'-'.Str::random(8)),
         ];
     }
 }

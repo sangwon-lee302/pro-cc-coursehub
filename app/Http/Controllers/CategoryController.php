@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
-use Illuminate\Support\Str;
+use App\Support\SlugGenerator;
 
 class CategoryController extends Controller
 {
@@ -27,7 +27,7 @@ class CategoryController extends Controller
 
         Category::create([
             'name' => $validated['name'],
-            'slug' => Str::slug($validated['name']),
+            'slug' => SlugGenerator::unique('categories', $validated['name'], 'category'),
         ]);
 
         return redirect()->route('admin.categories.index')
@@ -43,9 +43,13 @@ class CategoryController extends Controller
     {
         $validated = $request->validated();
 
+        $slug = $category->name === $validated['name']
+            ? $category->slug
+            : SlugGenerator::unique('categories', $validated['name'], 'category', $category->id);
+
         $category->update([
             'name' => $validated['name'],
-            'slug' => Str::slug($validated['name']),
+            'slug' => $slug,
         ]);
 
         return redirect()->route('admin.categories.index')
