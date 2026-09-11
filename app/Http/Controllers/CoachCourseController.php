@@ -8,6 +8,7 @@ use App\Models\Course;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class CoachCourseController extends Controller
 {
@@ -215,6 +216,9 @@ class CoachCourseController extends Controller
             return redirect()->route('coach.courses.index')
                 ->with('success', 'コースを作成しました。');
 
+        } catch (ValidationException $e) {
+            // バリデーションエラーはLaravel標準の挙動（フィールド別エラー）に委ねる
+            throw $e;
         } catch (\Exception $e) {
 
             // ============================================
