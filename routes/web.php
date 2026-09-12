@@ -42,10 +42,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/home', [DashboardController::class, 'index'])->name('home');
 
     // Profile
-    Route::prefix('profile')->name('profile.')->group(function () {
-        Route::get('/', [ProfileController::class, 'edit'])->name('edit');
-        Route::put('/', [ProfileController::class, 'update'])->name('update');
-    });
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     // Course browsing (student + coach + admin can view)
     Route::prefix('courses')->name('courses.')->group(function () {
