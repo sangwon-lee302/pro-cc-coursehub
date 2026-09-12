@@ -13,7 +13,9 @@ class CourseController extends Controller
     public function index(Request $request)
     {
         // Get published courses for the listing page
-        $query = Course::where('status', 'published');
+        $query = Course::where('status', 'published')
+            ->with(['user:id,name', 'category:id,name'])
+            ->withCount(['chapters', 'enrollments']);
 
         if ($request->filled('search')) {
             $search = LikeEscaper::escape($request->input('search'));
