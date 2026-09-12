@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateUserRoleRequest;
 use App\Models\User;
+use App\Support\LikeEscaper;
 use Illuminate\Http\Request;
 
 class AdminUserController extends Controller
@@ -17,7 +18,7 @@ class AdminUserController extends Controller
         }
 
         if ($request->filled('search')) {
-            $search = $request->input('search');
+            $search = LikeEscaper::escape($request->input('search'));
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");

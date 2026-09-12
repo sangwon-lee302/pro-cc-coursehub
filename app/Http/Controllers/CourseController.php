@@ -5,18 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Course;
 use App\Models\Review;
+use App\Support\LikeEscaper;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
-    // TODO: バリデーションを追加（search パラメータのサニタイズ）
     public function index(Request $request)
     {
         // Get published courses for the listing page
         $query = Course::where('status', 'published');
 
         if ($request->filled('search')) {
-            $search = $request->input('search');
+            $search = LikeEscaper::escape($request->input('search'));
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
                     ->orWhere('description', 'like', "%{$search}%");
