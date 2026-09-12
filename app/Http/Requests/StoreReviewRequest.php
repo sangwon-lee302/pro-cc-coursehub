@@ -2,13 +2,17 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Review;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreReviewRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        $course = $this->route('course');
+
+        return $this->user()->can('view', $course)
+            && $this->user()->can('create', [Review::class, $course]);
     }
 
     public function rules(): array

@@ -8,7 +8,7 @@ class UpdateChapterRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('manage', [$this->route('chapter'), $this->route('course')]);
     }
 
     public function rules(): array

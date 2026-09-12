@@ -10,9 +10,6 @@ class ReviewController extends Controller
 {
     public function store(StoreReviewRequest $request, Course $course)
     {
-        $this->authorize('view', $course);
-        $this->authorize('create', [Review::class, $course]);
-
         Review::create([
             'user_id' => auth()->id(),
             'course_id' => $course->id,

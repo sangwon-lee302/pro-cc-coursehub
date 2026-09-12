@@ -28,8 +28,6 @@ class CoachLessonController extends Controller
 
     public function store(StoreLessonRequest $request, Course $course, Chapter $chapter)
     {
-        $this->authorize('manage', [$chapter, $course]);
-
         $maxOrder = $chapter->lessons()->max('order') ?? 0;
 
         $chapter->lessons()->create([
@@ -52,8 +50,6 @@ class CoachLessonController extends Controller
 
     public function update(UpdateLessonRequest $request, Course $course, Chapter $chapter, Lesson $lesson)
     {
-        $this->authorize('manage', [$lesson, $chapter, $course]);
-
         $lesson->update([
             'title' => $request->validated()['title'],
             'body' => $request->validated()['body'],

@@ -8,7 +8,9 @@ class StoreQuizRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        $lesson = $this->route('lesson');
+
+        return $this->user()->can('manage', [$lesson, $lesson->chapter, $this->route('course')]);
     }
 
     public function rules(): array

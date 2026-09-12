@@ -88,8 +88,6 @@ class CoachCourseController extends Controller
 
     public function update(UpdateCourseRequest $request, Course $course)
     {
-        $this->authorize('update', $course);
-
         $validated = $request->validated();
 
         $course->update([
