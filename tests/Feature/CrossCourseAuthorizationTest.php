@@ -171,6 +171,16 @@ class CrossCourseAuthorizationTest extends TestCase
         $this->assertDatabaseMissing('quizzes', ['lesson_id' => $lessonWithoutQuiz->id]);
     }
 
+    public function test_coach_cannot_destroy_quiz_belonging_to_another_coachs_lesson(): void
+    {
+        $response = $this->actingAs($this->coachA)->delete(
+            route('coach.courses.lessons.quizzes.destroy', [$this->courseA, $this->lessonB])
+        );
+
+        $response->assertStatus(403);
+        $this->assertDatabaseHas('quizzes', ['id' => $this->quizB->id]);
+    }
+
     public function test_coach_cannot_destroy_question_belonging_to_another_coachs_lesson(): void
     {
         $questionB = Question::factory()->create(['quiz_id' => $this->quizB->id]);

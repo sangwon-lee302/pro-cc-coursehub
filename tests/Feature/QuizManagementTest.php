@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Chapter;
 use App\Models\Course;
 use App\Models\Lesson;
+use App\Models\Question;
 use App\Models\Quiz;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -136,5 +137,30 @@ class QuizManagementTest extends TestCase
 
         $response->assertSessionHasErrors('options');
         $this->assertDatabaseCount('questions', 0);
+    }
+
+    public function test_coach_can_delete_quiz(): void
+    {
+        Quiz::factory()->create(['lesson_id' => $this->lesson->id]);
+
+        $response = $this->actingAs($this->coach)->delete(
+            route('coach.courses.lessons.quizzes.destroy', [$this->course, $this->lesson])
+        );
+
+        $response->assertRedirect(route('coach.courses.lessons.quizzes.index', [$this->course, $this->lesson]));
+        $this->assertNull($this->lesson->quiz()->first());
+    }
+
+    public function test_coach_can_delete_question(): void
+    {
+        $quiz = Quiz::factory()->create(['lesson_id' => $this->lesson->id]);
+        $question = Question::factory()->create(['quiz_id' => $quiz->id]);
+
+        $response = $this->actingAs($this->coach)->delete(
+            route('coach.courses.lessons.quizzes.questions.destroy', [$this->course, $this->lesson, $question])
+        );
+
+        $response->assertRedirect(route('coach.courses.lessons.quizzes.index', [$this->course, $this->lesson]));
+        $this->assertDatabaseMissing('questions', ['id' => $question->id]);
     }
 }
