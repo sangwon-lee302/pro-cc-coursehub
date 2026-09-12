@@ -56,10 +56,12 @@ Route::middleware('auth')->group(function () {
     });
 
     // Course browsing (student + coach + admin can view)
-    Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
-    Route::get('/courses/{course}', [CourseController::class, 'show'])->name('courses.show');
-    Route::get('/courses/{course}/lessons/{lesson}', [LessonController::class, 'show'])->name('courses.lessons.show');
-    Route::get('/courses/{course}/quizzes/{quiz}', [QuizController::class, 'show'])->name('courses.quizzes.show');
+    Route::name('courses.')->group(function () {
+        Route::get('/courses', [CourseController::class, 'index'])->name('index');
+        Route::get('/courses/{course}', [CourseController::class, 'show'])->name('show');
+        Route::get('/courses/{course}/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
+        Route::get('/courses/{course}/quizzes/{quiz}', [QuizController::class, 'show'])->name('quizzes.show');
+    });
 
     // Coach routes
     Route::middleware('role:coach')->prefix('coach')->name('coach.')->group(function () {
