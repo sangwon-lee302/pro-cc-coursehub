@@ -59,6 +59,9 @@ class CoachCourseController extends Controller
                 $request->validated(),
                 $request->file('image')
             );
+
+            return redirect()->route('coach.courses.index')
+                ->with('success', 'コースを作成しました。');
         } catch (Exception $e) {
             Log::error('コース作成エラー: '.$e->getMessage(), [
                 'user_id' => auth()->id(),
@@ -70,9 +73,6 @@ class CoachCourseController extends Controller
                 'error' => 'コースの作成中にエラーが発生しました。もう一度お試しください。',
             ]);
         }
-
-        return redirect()->route('coach.courses.index')
-            ->with('success', 'コースを作成しました。');
     }
 
     public function edit(Course $course)
