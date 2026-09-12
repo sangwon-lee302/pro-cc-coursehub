@@ -45,6 +45,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
+    // Course browsing (student + coach + admin can view)
+    Route::name('courses.')->group(function () {
+        Route::get('/courses', [CourseController::class, 'index'])->name('index');
+        Route::get('/courses/{course}', [CourseController::class, 'show'])->name('show');
+        Route::get('/courses/{course}/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
+        Route::get('/courses/{course}/quizzes/{quiz}', [QuizController::class, 'show'])->name('quizzes.show');
+    });
+
     // Student routes
     Route::middleware('role:student')->group(function () {
         Route::get('/my-courses', [MyCourseController::class, 'index'])->name('my-courses.index');
@@ -53,14 +61,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/courses/{course}/quizzes/{quiz}/submit', [QuizController::class, 'submit'])->name('courses.quizzes.submit');
         Route::get('/courses/{course}/quizzes/{quiz}/result', [QuizController::class, 'result'])->name('courses.quizzes.result');
         Route::post('/courses/{course}/reviews', [ReviewController::class, 'store'])->name('courses.reviews.store');
-    });
-
-    // Course browsing (student + coach + admin can view)
-    Route::name('courses.')->group(function () {
-        Route::get('/courses', [CourseController::class, 'index'])->name('index');
-        Route::get('/courses/{course}', [CourseController::class, 'show'])->name('show');
-        Route::get('/courses/{course}/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
-        Route::get('/courses/{course}/quizzes/{quiz}', [QuizController::class, 'show'])->name('quizzes.show');
     });
 
     // Coach routes
