@@ -42,15 +42,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/home', [DashboardController::class, 'index'])->name('home');
 
     // Profile
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'edit'])->name('edit');
+        Route::put('/', [ProfileController::class, 'update'])->name('update');
+    });
 
     // Course browsing (student + coach + admin can view)
-    Route::name('courses.')->group(function () {
-        Route::get('/courses', [CourseController::class, 'index'])->name('index');
-        Route::get('/courses/{course}', [CourseController::class, 'show'])->name('show');
-        Route::get('/courses/{course}/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
-        Route::get('/courses/{course}/quizzes/{quiz}', [QuizController::class, 'show'])->name('quizzes.show');
+    Route::prefix('courses')->name('courses.')->group(function () {
+        Route::get('/', [CourseController::class, 'index'])->name('index');
+        Route::get('{course}', [CourseController::class, 'show'])->name('show');
+        Route::get('{course}/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
+        Route::get('{course}/quizzes/{quiz}', [QuizController::class, 'show'])->name('quizzes.show');
     });
 
     // Student routes
