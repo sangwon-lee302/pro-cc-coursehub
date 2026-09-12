@@ -5,11 +5,13 @@ namespace Tests\Feature;
 use App\Models\Category;
 use App\Models\Chapter;
 use App\Models\Course;
+use App\Models\Enrollment;
 use App\Models\Lesson;
 use App\Models\LessonProgress;
 use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class CourseTest extends TestCase
@@ -307,6 +309,36 @@ class CourseTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('sample_test基礎');
         $response->assertDontSee('sampleZtest基礎');
+    }
+
+    public function test_course_list_query_count_does_not_grow_with_course_count(): void
+    {
+        $makeCourseWithData = function () {
+            $course = Course::factory()->create([
+                'user_id' => $this->coach->id,
+                'category_id' => $this->category->id,
+                'status' => 'published',
+            ]);
+            Chapter::factory()->count(2)->create(['course_id' => $course->id]);
+            Enrollment::factory()->count(2)->create(['course_id' => $course->id]);
+        };
+
+        $makeCourseWithData();
+
+        DB::enableQueryLog();
+        $this->actingAs($this->student)->get('/courses');
+        $queryCountForOneCourse = count(DB::getQueryLog());
+        DB::flushQueryLog();
+
+        $makeCourseWithData();
+        $makeCourseWithData();
+
+        DB::flushQueryLog();
+        $this->actingAs($this->student)->get('/courses');
+        $queryCountForThreeCourses = count(DB::getQueryLog());
+        DB::disableQueryLog();
+
+        $this->assertSame($queryCountForOneCourse, $queryCountForThreeCourses);
     }
 
     public function test_progress_rate_reaches_100_percent_with_unpublished_lessons(): void
