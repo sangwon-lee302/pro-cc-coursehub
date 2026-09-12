@@ -101,7 +101,8 @@ QUEUE_CONNECTION=redis
 
 ### Policy
 - リソースのアクセス制御は Policy で実装する
-- Controller で `$this->authorize()` を使用する
+- Form Request を使わないアクションは Controller で `$this->authorize()` を使用する
+- Form Request を使うアクションは、その Form Request の `authorize()` 内で `$this->user()->can()` を使って認可する（`bool` を返せば不許可時の例外送出はフレームワークに任せられる。Controller 側で重複して認可チェックを書かない）
 
 ### イベント
 - 重要なドメインイベントは Event/Listener パターンで実装する

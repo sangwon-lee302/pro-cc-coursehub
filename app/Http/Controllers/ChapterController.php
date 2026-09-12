@@ -28,8 +28,6 @@ class ChapterController extends Controller
 
     public function store(StoreChapterRequest $request, Course $course)
     {
-        $this->authorize('update', $course);
-
         $validated = $request->validated();
 
         $maxOrder = $course->chapters()->max('order') ?? 0;
@@ -52,8 +50,6 @@ class ChapterController extends Controller
 
     public function update(UpdateChapterRequest $request, Course $course, Chapter $chapter)
     {
-        $this->authorize('manage', [$chapter, $course]);
-
         $validated = $request->validated();
 
         $chapter->update($validated);
@@ -74,8 +70,6 @@ class ChapterController extends Controller
 
     public function updateOrder(UpdateChapterOrderRequest $request, Course $course)
     {
-        $this->authorize('update', $course);
-
         $validated = $request->validated();
 
         foreach ($validated['order'] as $index => $chapterId) {

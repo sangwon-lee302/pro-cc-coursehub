@@ -25,8 +25,6 @@ class QuizManageController extends Controller
 
     public function store(StoreQuizRequest $request, Course $course, Lesson $lesson)
     {
-        $this->authorize('manage', [$lesson, $lesson->chapter, $course]);
-
         $validated = $request->validated();
 
         $lesson->quiz()->create($validated);
@@ -37,8 +35,6 @@ class QuizManageController extends Controller
 
     public function update(UpdateQuizRequest $request, Course $course, Lesson $lesson)
     {
-        $this->authorize('manage', [$lesson, $lesson->chapter, $course]);
-
         $quiz = $lesson->quiz;
         if (! $quiz) {
             abort(404);
@@ -67,8 +63,6 @@ class QuizManageController extends Controller
 
     public function storeQuestion(StoreQuestionRequest $request, Course $course, Lesson $lesson)
     {
-        $this->authorize('manage', [$lesson, $lesson->chapter, $course]);
-
         $quiz = $lesson->quiz;
         if (! $quiz) {
             abort(404);
