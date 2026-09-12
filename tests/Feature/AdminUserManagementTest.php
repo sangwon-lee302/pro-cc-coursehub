@@ -52,4 +52,16 @@ class AdminUserManagementTest extends TestCase
         $response->assertSessionHasErrors('role');
         $this->assertSame('student', $user->fresh()->role);
     }
+
+    public function test_user_search_treats_percent_and_underscore_as_literal_characters(): void
+    {
+        User::factory()->create(['name' => 'sample_user']);
+        User::factory()->create(['name' => 'sampleZuser']);
+
+        $response = $this->actingAs($this->admin)->get('/admin/users?search=sample_user');
+
+        $response->assertStatus(200);
+        $response->assertSee('sample_user');
+        $response->assertDontSee('sampleZuser');
+    }
 }

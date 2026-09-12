@@ -285,6 +285,30 @@ class CourseTest extends TestCase
         $response->assertDontSee('React基礎');
     }
 
+    public function test_course_search_treats_percent_and_underscore_as_literal_characters(): void
+    {
+        Course::factory()->create([
+            'user_id' => $this->coach->id,
+            'category_id' => $this->category->id,
+            'status' => 'published',
+            'title' => 'sample_test基礎',
+        ]);
+
+        Course::factory()->create([
+            'user_id' => $this->coach->id,
+            'category_id' => $this->category->id,
+            'status' => 'published',
+            'title' => 'sampleZtest基礎',
+        ]);
+
+        $response = $this->actingAs($this->student)
+            ->get('/courses?search=sample_test');
+
+        $response->assertStatus(200);
+        $response->assertSee('sample_test基礎');
+        $response->assertDontSee('sampleZtest基礎');
+    }
+
     public function test_progress_rate_reaches_100_percent_with_unpublished_lessons(): void
     {
         $course = Course::factory()->create([
